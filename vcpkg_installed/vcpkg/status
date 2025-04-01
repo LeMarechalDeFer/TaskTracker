@@ -22,3 +22,13 @@ Abi: 17002ddabe2d999f356b858326761515d9a2976f76e80d4af9327b02cb2c7756
 Description: {fmt} is an open-source formatting library providing a fast and safe alternative to C stdio and C++ iostreams.
 Status: install ok installed
 
+Package: nlohmann-json
+Version: 3.11.3
+Port-Version: 1
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-linux
+Multi-Arch: same
+Abi: e0d6d1893077b4e5f05503e2a31ea1d079e2c4c1a9e594af9d85446da1e3acee
+Description: JSON for Modern C++
+Status: install ok installed
+

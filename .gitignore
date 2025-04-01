@@ -50,10 +50,12 @@ Testing/
 # Fichiers spécifiques à pnpm
 node_modules/
 .pnpm-store/
-pnpm-lock.yaml
+# pnpm-lock.yaml
 pnpm-workspace.yaml
 .pnpm-debug.log
 
 # Autres fichiers à ignorer
 .DS_Store
 Thumbs.db
+
+vcpkg_installed/
