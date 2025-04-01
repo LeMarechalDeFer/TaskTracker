@@ -1,0 +1,59 @@
+# Fichiers objets et exécutables C++
+*.o
+*.obj
+*.exe
+*.out
+*.app
+*.dll
+*.so
+*.dylib
+
+# Fichiers de compilation et de build
+*.ilk
+*.pdb
+*.idb
+*.ipch
+build/
+Debug/
+Release/
+x64/
+x86/
+*.dSYM/
+
+# Fichiers de cache et de configuration IDE
+.vs/
+.vscode/
+*.swp
+*.swo
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.vcxproj.filters
+*.vcxproj.user
+
+# Fichiers de dépendances et bibliothèques
+lib/
+libs/
+vendor/
+
+# Fichiers de précompilation
+*.gch
+*.pch
+
+# Fichiers de logs et de tests
+*.log
+*.tlog
+Testing/
+
+# Fichiers spécifiques à pnpm
+node_modules/
+.pnpm-store/
+pnpm-lock.yaml
+pnpm-workspace.yaml
+.pnpm-debug.log
+
+# Autres fichiers à ignorer
+.DS_Store
+Thumbs.db
