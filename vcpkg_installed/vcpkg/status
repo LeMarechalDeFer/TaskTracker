@@ -32,3 +32,12 @@ Abi: e0d6d1893077b4e5f05503e2a31ea1d079e2c4c1a9e594af9d85446da1e3acee
 Description: JSON for Modern C++
 Status: install ok installed
 
+Package: cli11
+Version: 2.5.0
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-linux
+Multi-Arch: same
+Abi: 3b53eedc424d984385d416f136ee65002884bae25904cde91bb5b0ed7176d3f9
+Description: CLI11 is a command line parser for C++11 and beyond that provides a rich feature set with a simple and intuitive interface.
+Status: install ok installed
+
