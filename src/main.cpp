@@ -24,45 +24,28 @@
 int main(){
 
     fmt::print("Hello world! Welcome to my TaskTrackerCLI, this project is for reviewing and practicing C++\n");
-    // Création d'un objet JSON
 
-    std::vector<Task> temp = {
-        {
-            .id = 1,
-            .description = "Test",
-            .status = "Done", 
-            .createdAt = std::time(nullptr),
-            .updatedAt = std::time(nullptr)
-        }
-    };
-    TaskManager::LoadTasks();
-    TaskManager::saveTasks(temp);
-  
-    return 0;
+    fmt::print("📋 Bienvenue dans TaskTrackerCLI — Test des fonctions principales\n");
+
+    // 🔹 1. Test - Adding a task
+    fmt::print("\n[TEST] Adding a task...\n");
+    TasksManager::addTask("Do my AI homework, no it's more fun to do cpp");
+
+    // 🔹 2. Test - Modifying the description
+    fmt::print("\n[TEST] Modifying task description ID 1...\n");
+    TasksManager::editTaskDescription(1, "Read AI docs and do Bayesian Networks and do homework blablabla");
+
+    // 🔹 3. Test - Changing status
+    fmt::print("\n[TEST] Changing task ID 1 status to 'in-progress'...\n");
+    TasksManager::changeTaskStatus(1, "in-progress");
+
+    // 🔹 4. Test - Deleting a task
+    fmt::print("\n[TEST] Deleting task ID 1...\n");
+    TasksManager::deleteTask(1);
+
+    // 🔹 5. Test - Deleting a non-existent task
+    fmt::print("\n[TEST] Deleting non-existent task ID 999...\n");
+    TasksManager::deleteTask(999);
+
+    fmt::print("\n✅ All basic tests have been executed.\n");
 }
-
-  // // Ajout de différentes valeurs
-    // j["nom"] = "Dupont";
-    // j["prenom"] = "Jean";
-    // j["age"] = 30;
-    // j["estActif"] = true;
-    // j["competences"] = {"C++", "Python", "JavaScript"};
-    
-    // // Création d'un sous-objet
-    // nlohmann::json adresse;
-    // adresse["rue"] = "123 Avenue des Codeurs";
-    // adresse["ville"] = "Programmeville";
-    // adresse["codePostal"] = "75000";
-    
-    // // Ajout du sous-objet au JSON principal
-    // j["adresse"] = adresse;
-    
-    // // Affichage du JSON formaté
-    // fmt::print("JSON créé:\n{}\n", j.dump(4));
-    
-    // // Accès aux valeurs
-    // fmt::print("\nAccès aux données:\n");
-    // fmt::print("Nom: {}\n", j["nom"].get<std::string>());
-    // fmt::print("Âge: {}\n", j["age"].get<int>());
-    // fmt::print("Première compétence: {}\n", j["competences"][0].get<std::string>());
-    // fmt::print("Ville: {}\n", j["adresse"]["ville"].get<std::string>());

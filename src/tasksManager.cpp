@@ -2,10 +2,11 @@
 #include <fmt/core.h>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
-const std::string TaskManager::filename = "tasksFile.json";
+const std::string TasksManager::filename = "tasksFile.json";
 
-void TaskManager::createJsonFile(){
+void TasksManager::createJsonFile(){
     std::ifstream checkFile(filename);
 
     if(!checkFile.is_open()){
@@ -24,12 +25,12 @@ void TaskManager::createJsonFile(){
     }
 }
 
-std::vector<Task> TaskManager::LoadTasks(){
+std::vector<Task> TasksManager::LoadTasks(){
     
     std::ifstream file(filename) ; 
     if (!file.is_open()) {
         fmt::println("File not found, creating new file '{}'", filename);
-        TaskManager::createJsonFile();
+        TasksManager::createJsonFile();
         return {};
     }
     json j ; 
@@ -55,7 +56,7 @@ std::vector<Task> TaskManager::LoadTasks(){
     
 }
 
-void TaskManager::saveTasks(const std::vector<Task> &tasksList){
+void TasksManager::saveTasks(const std::vector<Task> &tasksList){
     std::ofstream file(filename);
     if(!file.is_open()){
         fmt::println("Error: file not found");
@@ -69,8 +70,135 @@ void TaskManager::saveTasks(const std::vector<Task> &tasksList){
     }
 }
 
+void TasksManager::addTask(const std::string& description){
+    
+    
+
+    try {
+        std::vector<Task> tasksList = LoadTasks();
+        std::time_t now = std::time(nullptr);
+
+        int newId = getNextTaskId(tasksList);
+        tasksList.emplace_back(Task{
+            .id = newId,
+            .description = description,
+            .status = "todo", 
+            .createdAt = now,
+            .updatedAt = now
+        });
+
+        fmt::println("Success: Added task {} - '{}'", newId, description);
+        saveTasks(tasksList);
+    }
+    catch(const std::exception& e) {
+        fmt::println("Error: Failed to add task - {}", e.what());
+    }
+}
+
+int TasksManager::getNextTaskId(const std::vector<Task> &tasksList){
+
+    std::vector<Task>::const_iterator it ;
+    int maxId = 0;
+
+    for(it = tasksList.begin(); it != tasksList.end(); it++){
+        if(it->id > maxId){
+            maxId = it->id ;
+        }
+    }
+    return maxId +1 ;
+}
 
 
+
+void TasksManager::deleteTask(int id){
+    try {
+        std::vector<Task> tasksList = LoadTasks();
+        std::vector<Task>::iterator it = tasksList.begin(); 
+        bool found = false;
+
+        while (it != tasksList.end()) {
+            if(it->id == id){
+                int deletedId = it->id;
+                tasksList.erase(it);
+                fmt::println("Successful deletion of {} ID", deletedId);
+                found = true;
+                break;
+            }
+            it++;
+        }
+
+        if (!found) {
+            fmt::println("Error: Task with ID {} not found", id);
+            return;
+        }
+
+        saveTasks(tasksList);
+    } catch(const std::exception& e) {
+        fmt::println("Error while deleting task: {}", e.what());
+    }
+}
+
+void TasksManager::editTaskDescription(int id, const std::string& newDescription){
+    try
+    {
+        std::vector<Task> tasksList = LoadTasks();
+        std::vector<Task>::iterator it = tasksList.begin(); 
+        bool found = false;
+
+        while (it != tasksList.end())
+        {
+            if(it->id == id){ 
+                it->description = newDescription;
+                fmt::println("Successful editing of {} ID", it->id);
+                found = true;
+                break;
+            }
+            it++;
+        }
+
+        if(!found){
+            fmt::println("Task {} not found", id);
+            return ;
+        }
+
+        saveTasks(tasksList);
+    }
+    catch(const std::exception& e)
+    {
+        fmt::println("Error while editing task: {}", e.what());
+    }
+}
+
+void TasksManager::changeTaskStatus(int id, const std::string& newStatus){
+    try
+    {
+        std::vector<Task> tasksList = LoadTasks();
+        std::vector<Task>::iterator it = tasksList.begin(); 
+        bool found = false;
+
+        while (it != tasksList.end())
+        {
+            if(it->id == id){ // Correction: = changé en ==
+                it->status = newStatus;
+                fmt::println("Successful status editing of {} ID", it->id);
+                found = true;
+                break;
+            }
+            it++;
+        }
+        
+        if(!found){
+            fmt::println("Task {} not found", id);
+            return;
+        }
+
+        saveTasks(tasksList);
+    }
+    catch(const std::exception& e)
+    {
+        fmt::println("Error while editing status: {}", e.what());
+    }
+}
 
 
 // void TaskManager::printAllTasks() {

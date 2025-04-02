@@ -20,24 +20,24 @@ using json = nlohmann::json;
 // task edit 2 "Faire du café"
 // task status 2 in-progress
 
-class TaskManager{
-    public:
-        static std::vector<Task> LoadTasks(); //ok
-        static void saveTasks(const std::vector<Task>& tasksList); //ok
-
+class TasksManager{
+    public:     
         static void printAllTasks();
         static void printTasksByStatus(const std::string& status);
 
-        static void addTask(const std::string& description); 
-        static void deleteTask(int id);
-        static void editTaskDescription(int id, const std::string& newDescription);
-        static void changeTaskStatus(int id, const std::string& newStatus);
+        static void addTask(const std::string& description); //ok
+        static void deleteTask(int id); //ok
+        static void editTaskDescription(int id, const std::string& newDescription);//ok
+        static void changeTaskStatus(int id, const std::string& newStatus); //ok
         
 
     private :
+        static void saveTasks(const std::vector<Task>& tasksList); //ok
         static const std::string filename;  //ok
+        static std::vector<Task> LoadTasks(); //ok
         static void printTasks(const std::function<bool(const Task&)>& filter); 
         static void createJsonFile(); //ok
+        static int getNextTaskId(const std::vector<Task> &tasksList); //ok
         
 };
 
