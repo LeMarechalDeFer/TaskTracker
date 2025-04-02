@@ -2,8 +2,12 @@
 #include <fmt/core.h>
 #include <nlohmann/json.hpp>
 #include <CLI/CLI.hpp>
+#include "tasksManager.hpp"
 
-using json = nlohmann::json;
+
+#include "tasks.hpp"
+#include <vector>
+#include <ctime>
 
 // Requirements
 // The application should run from the command line, accept user actions and inputs as arguments, and store the tasks in a JSON file. The user should be able to:
@@ -15,14 +19,29 @@ using json = nlohmann::json;
 // List all tasks that are not done
 // List all tasks that are in progress
 
+// on assume que le chemin sera toujours celui du dossier courant. 
 
 int main(){
 
     fmt::print("Hello world! Welcome to my TaskTrackerCLI, this project is for reviewing and practicing C++\n");
     // Création d'un objet JSON
-    json j;
-    
-    // // Ajout de différentes valeurs
+
+    std::vector<Task> temp = {
+        {
+            .id = 1,
+            .description = "Test",
+            .status = "Done", 
+            .createdAt = std::time(nullptr),
+            .updatedAt = std::time(nullptr)
+        }
+    };
+    TaskManager::LoadTasks();
+    TaskManager::saveTasks(temp);
+  
+    return 0;
+}
+
+  // // Ajout de différentes valeurs
     // j["nom"] = "Dupont";
     // j["prenom"] = "Jean";
     // j["age"] = 30;
@@ -47,5 +66,3 @@ int main(){
     // fmt::print("Âge: {}\n", j["age"].get<int>());
     // fmt::print("Première compétence: {}\n", j["competences"][0].get<std::string>());
     // fmt::print("Ville: {}\n", j["adresse"]["ville"].get<std::string>());
-    return 0;
-}
