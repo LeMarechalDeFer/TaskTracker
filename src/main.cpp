@@ -47,5 +47,16 @@ int main(){
     fmt::print("\n[TEST] Deleting non-existent task ID 999...\n");
     TasksManager::deleteTask(999);
 
+    // Print all
+    fmt::print("\n[TEST] Printing all Tasks...\n");
+    TasksManager::printAllTasks();
+
+    fmt::print("\n[TEST] Printing status Tasks...\n");
+    std::string status = "todo";
+    TasksManager::printTasksByStatus(status);
+
+
+
+
     fmt::print("\n✅ All basic tests have been executed.\n");
 }

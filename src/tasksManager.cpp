@@ -149,6 +149,7 @@ void TasksManager::editTaskDescription(int id, const std::string& newDescription
         {
             if(it->id == id){ 
                 it->description = newDescription;
+                it->updatedAt = std::time(nullptr);
                 fmt::println("Successful editing of {} ID", it->id);
                 found = true;
                 break;
@@ -180,6 +181,7 @@ void TasksManager::changeTaskStatus(int id, const std::string& newStatus){
         {
             if(it->id == id){ // Correction: = changé en ==
                 it->status = newStatus;
+                it->updatedAt = std::time(nullptr);
                 fmt::println("Successful status editing of {} ID", it->id);
                 found = true;
                 break;
@@ -200,24 +202,83 @@ void TasksManager::changeTaskStatus(int id, const std::string& newStatus){
     }
 }
 
+// void TasksManager::printTasks(){
 
-// void TaskManager::printAllTasks() {
-//     printTasks([](const Task&) {
-//         return true; // tout afficher
-//     });
 // }
 
-// void TaskManager::printTasksByStatus(const std::string& status) {
-//     printTasks([&](const Task& t) {
-//         return t.status == status;
-//     });
-// }
+void TasksManager::printAllTasks(){
+    std::vector<Task> tasksList = LoadTasks();
 
-// void TaskManager::printTasks(const std::function<bool(const Task&)>& filter) {
-//     auto tasks = LoadTasks();
-//     for (const auto& task : tasks) {
-//         if (filter(task)) {
-//             std::cout << "- " << task.description << " [" << task.status << "]\n";
-//         }
-//     }
-// }
+    if(tasksList.empty()){
+        fmt::println("📭 Any task to display...");
+    }
+
+    fmt::println("📋 Your Tasks List");
+
+    for (const auto& task : tasksList) {
+        std::string statusEmoji;
+
+        if (task.status == "todo") statusEmoji = "📄";
+        else if (task.status == "in-progress") statusEmoji = "🛠️ ";
+        else if (task.status == "done") statusEmoji = "✅";
+        else statusEmoji = "❓";
+
+        // timestamps format 
+        std::tm* created = std::localtime(&task.createdAt);
+        std::tm* updated = std::localtime(&task.updatedAt);
+        char createdStr[20];
+        char updatedStr[20];
+        std::strftime(createdStr, sizeof(createdStr), "%Y-%m-%d %H:%M", created);
+        std::strftime(updatedStr, sizeof(updatedStr), "%Y-%m-%d %H:%M", updated);
+
+        fmt::print("[{}] {} {:<30} | Status: {:<13} | Created: {} | Updated: {}\n",
+                task.id,
+                statusEmoji,
+                task.description,
+                task.status,
+                createdStr,
+                updatedStr
+            );
+    }
+
+}
+
+void TasksManager::printTasksByStatus(const std::string &status){
+    std::vector<Task> tasksList = LoadTasks();
+
+    if(tasksList.empty()){
+        fmt::println("📭 Any task to display...");
+    }
+
+    fmt::println("📋 Your '{}' Tasks List", status);
+
+    for(const auto& task : tasksList){
+        if(status == task.status){
+            std::string statusEmoji;
+
+            if (task.status == "todo") statusEmoji = "📄";
+            else if (task.status == "in-progress") statusEmoji = "🛠️ ";
+            else if (task.status == "done") statusEmoji = "✅";
+            else statusEmoji = "❓";
+
+            // timestamps format 
+            std::tm* created = std::localtime(&task.createdAt);
+            std::tm* updated = std::localtime(&task.updatedAt);
+            char createdStr[20];
+            char updatedStr[20];
+            std::strftime(createdStr, sizeof(createdStr), "%Y-%m-%d %H:%M", created);
+            std::strftime(updatedStr, sizeof(updatedStr), "%Y-%m-%d %H:%M", updated);
+
+            fmt::print("[{}] {} {:<30} | Status: {:<13} | Created: {} | Updated: {}\n",
+                task.id,
+                statusEmoji,
+                task.description,
+                task.status,
+                createdStr,
+                updatedStr
+            );
+        }
+    }
+
+
+}
