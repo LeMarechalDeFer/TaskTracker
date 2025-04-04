@@ -7,5 +7,6 @@
 	"scripts": {
 		"prepare": "husky",
 		"test": "echo \"Test: nothing to test\" "
-	}
+	},
+	"type": "module"
 }
