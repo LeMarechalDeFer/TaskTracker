@@ -1,0 +1,3 @@
+#!/bin/bash
+set -euo
+echo "✅ TaskTrackerCLI installé avec succès. Utilisez la commande: task"
