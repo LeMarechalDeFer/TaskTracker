@@ -3,8 +3,30 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include <filesystem>
+#include <cstdlib> 
 
-const std::string TasksManager::filename = "tasksFile.json";
+const std::string TasksManager::filename = [] {
+    const char* home = std::getenv("HOME");
+    if (!home) throw std::runtime_error("HOME environment variable not set");
+
+    std::filesystem::path configDir = std::filesystem::path(home) / ".tasktrackercli";
+    std::filesystem::path filePath = configDir / "tasksFile.json";
+
+    if (!std::filesystem::exists(configDir)) {
+        std::filesystem::create_directories(configDir);
+        fmt::print("📂 Created config directory: {}\n", configDir.string());
+    }
+
+    if (!std::filesystem::exists(filePath)) {
+        fmt::print("📄 Will create tasks file at: {}\n", filePath.string());
+    }
+
+    return filePath.string();
+}();
+
+
+// const std::string TasksManager::filename = "tasksFile.json";
 
 void TasksManager::createJsonFile(){
     std::ifstream checkFile(filename);
