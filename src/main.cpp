@@ -3,11 +3,8 @@
 #include <nlohmann/json.hpp>
 #include <CLI/CLI.hpp>
 #include "tasksManager.hpp"
-
-
-#include "tasks.hpp"
-#include <vector>
-#include <ctime>
+#include <string>
+#include <optional>
 
 // Requirements
 // The application should run from the command line, accept user actions and inputs as arguments, and store the tasks in a JSON file. The user should be able to:
@@ -21,42 +18,77 @@
 
 // on assume que le chemin sera toujours celui du dossier courant. 
 
-int main(){
+int main(int argc, char** argv){
 
-    fmt::print("Hello world! Welcome to my TaskTrackerCLI, this project is for reviewing and practicing C++\n");
+    CLI::App app{"Hello world! Welcome to my TaskTrackerCLI, this project is for reviewing and practicing C++\n"};
+    
+    auto addTaskCmd = app.add_subcommand("add");
+    auto deleteTaskCmd = app.add_subcommand("delete");
+    auto editTaskCmd = app.add_subcommand("edit");
+    auto changeStatusCmd = app.add_subcommand("status");
+    auto printCmd = app.add_subcommand("print");
 
-    fmt::print("📋 Bienvenue dans TaskTrackerCLI — Test des fonctions principales\n");
+    std::optional<std::string> description ;
+    addTaskCmd->add_option("--description", description, "Description of your task, don't forget ' ' ");
 
-    // 🔹 1. Test - Adding a task
-    fmt::print("\n[TEST] Adding a task...\n");
-    TasksManager::addTask("Do my AI homework, no it's more fun to do cpp");
+    std::optional<int> deleteID ; 
+    deleteTaskCmd->add_option("--id", deleteID, "Id to delete");
 
-    // 🔹 2. Test - Modifying the description
-    fmt::print("\n[TEST] Modifying task description ID 1...\n");
-    TasksManager::editTaskDescription(1, "Read AI docs and do Bayesian Networks and do homework blablabla");
+    std::optional<int> updateID ;
+    std::optional<std::string> updateDescription ;
+    editTaskCmd->add_option("--id", updateID, "Id to update");
+    editTaskCmd->add_option("--description", updateDescription, "Description to update");
+    
+    std::optional<int> statusID ;
+    std::optional<std::string> newStatus ;
+    changeStatusCmd->add_option("--id", statusID, "Id to change status");
+    changeStatusCmd->add_option("--status", newStatus, "Status to update (todo, in-progress, done)")
+    ->check(CLI::IsMember({"all", "todo", "in-progress", "done"}));
 
-    // 🔹 3. Test - Changing status
-    fmt::print("\n[TEST] Changing task ID 1 status to 'in-progress'...\n");
-    TasksManager::changeTaskStatus(1, "in-progress");
+    std::optional<std::string> printingByStatus ;
+    printCmd->add_option("--status", printingByStatus, "Printing by status (all, todo, in-progress, done)")
+    ->check(CLI::IsMember({"all", "todo", "in-progress", "done"}));
 
-    // 🔹 4. Test - Deleting a task
-    fmt::print("\n[TEST] Deleting task ID 1...\n");
-    TasksManager::deleteTask(1);
+    CLI11_PARSE(app, argc, argv);
 
-    // 🔹 5. Test - Deleting a non-existent task
-    fmt::print("\n[TEST] Deleting non-existent task ID 999...\n");
-    TasksManager::deleteTask(999);
+    if(description.has_value()){
+        TasksManager::addTask(description.value());
+    }
 
-    // Print all
-    fmt::print("\n[TEST] Printing all Tasks...\n");
-    TasksManager::printAllTasks();
+    if(deleteID.has_value()){
+        TasksManager::deleteTask(deleteID.value());
+    }
 
-    fmt::print("\n[TEST] Printing status Tasks...\n");
-    std::string status = "todo";
-    TasksManager::printTasksByStatus(status);
+    if(updateID.has_value() && updateDescription.has_value()){
+        TasksManager::editTaskDescription(updateID.value(), updateDescription.value());
+    }else if(updateID.has_value() && !updateDescription.has_value()){
+        fmt::print("❌ Missing new description.\n💡 Format: edit --id <yourID> --description 'your new description'\n");
+    }else if(!updateID.has_value() && updateDescription.has_value()){
+        fmt::print("❌ Missing ID of the task to edit.\n💡 Format: edit --id <yourID> --description 'your new description'\n");
+    }
 
+    if (statusID.has_value() && newStatus.has_value()) {
+    TasksManager::changeTaskStatus(statusID.value(), newStatus.value());
+    } else if (statusID.has_value() && !newStatus.has_value()) {
+        fmt::print("❌ Missing new status value.\n💡 Format: status --id <yourID> --status 'your new status' (all, todo, in-progress, done)\n");
+    } else if (!statusID.has_value() && newStatus.has_value()) {
+        fmt::print("❌ Missing new status Id.\n💡 Format: status --id <yourID> --status 'your new status' (all, todo, in-progress, done)\n\n");
+    }
 
+    if(printingByStatus.has_value()){
+        if(printingByStatus.value() == "all"){
+            TasksManager::printAllTasks();
+        }else{
+            TasksManager::printTasksByStatus(printingByStatus.value());
+        }
+    }
 
-
-    fmt::print("\n✅ All basic tests have been executed.\n");
 }
+
+
+
+   
+
+    
+
+
